@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title> Projeto Fructus</title>
+        <style type="text/css">
+            body {background-color:forestgreen; font-size: 12px}
+        </style> 
+    </h:head>
+    <h:body>
+        <div align="center">
+            <p:layout style="min-width:1020px;max-width:1020px;min-height:600px">  
+                <p:growl id="msgGlobal" life="5000"/>
+                <p:layoutUnit position="north" size="100">  
+                    <img src="Imagem/condominio.png"></img>
+                </p:layoutUnit>  
+
+                <p:layoutUnit position="west" size="220">  
+                    <ui:insert name="menu">
+                        <h:form>
+                            <p:menu toggleable="true">
+                                <p:submenu label="Cadastros">
+                                    <p:menuitem value="Clientes"  icon="ui-icon-person" url="index.xhtml"/>
+                                    <p:menuitem value="Fornecedores"  icon="ui-icon-person" url="teste.xhtml"/>
+                                    <p:menuitem value ="Cidades" icon="ui-icon-home" url="cadastro_cidade.xhtml"/>
+                                    <p:menuitem value="Fazendas" icon="ui-icon-person" url="cadastro_fazenda.xhtml"/>
+                                    <p:menuitem value="Filiais" icon="ui-icon-person" url="cadastro_filial.xhtml"/>
+                                    <p:menuitem value="Produtores" icon="ui-icon-person" url="cadastro_produtor.xhtml"/>
+                                    <p:menuitem value="Terra" icon="ui-icon-person" url="cadastro_glebaterra.xhtml"/>
+                                    <p:menuitem value="Parceria" icon="ui-icon-person" url="cadastro_parceria.xhtml"/>
+                                    <p:menuitem value="Depósito" icon="ui-icon-person" url="cadastro_deposito.xhtml"/>
+                                    <p:separator />
+                                    <p:menuitem value ="Grãos" icon="ui-icon-home" url="cadastro_graos.xhtml"/>
+                                    <p:menuitem value ="Safras" icon="ui-icon-home" url="cadastro_safra.xhtml"/>
+                                    <p:menuitem value ="Unid.Medida" icon="ui-icon-home" url="cadastro_unimed.xhtml"/>
+                                    <p:menuitem value ="Variedade Plantada" icon="ui-icon-home" url="cadastro_variedadegrao.xhtml"/>
+                                    <p:menuitem value ="Talhão" icon="ui-icon-home" url="cadastro_talhao.xhtml"/>
+                                    <p:menuitem value ="Safra/Talhao" icon="ui-icon-home" url="cadastro_safratalhao.xhtml"/>
+                                    <p:separator />
+                                    <p:menuitem value ="CFOP" icon="ui-icon-home"/>
+                                    <p:menuitem value ="Modelo de Documento" icon="ui-icon-home"/>
+                                    <p:menuitem value ="Natureza da operação" icon="ui-icon-home"/>
+                                    <p:separator />
+                                    <p:menuitem value ="Banco" icon="ui-icon-bank"/>
+                                    <p:menuitem value ="Agência" icon="ui-icon-home"/>
+                                    <p:menuitem value ="Conta" icon="ui-icon-home"/>
+                                    <p:menuitem value ="Sair" icon="ui-icon-home"/>
+                                </p:submenu>
+                                <p:submenu label="Safras">
+                                    <p:menuitem value="Entrada de Produção" icon="ui-icon-person" url="entrada_producao.xhtml"/>
+                                    <p:menuitem value="Saída de Produção"  ajax="false" icon="ui-icon-close"/>
+                                    <p:menuitem value="Transf. de Depósito"  ajax="false" icon="ui-icon-close"/>
+                                </p:submenu>
+                                <p:submenu label="Estoque">
+                                    <p:menuitem value="Entrada de Produto"  icon="ui-icon-home"/>
+                                    <p:menuitem value="Saída de Produto"  icon="ui-icon-star"/>
+                                </p:submenu>
+                            </p:menu>
+                        </h:form>
+                    </ui:insert>
+                </p:layoutUnit>  
+                <p:layoutUnit position="center">  
+                    <ui:insert name="centro">
+                        O que estiver aqui será substituido!
+                    </ui:insert>
+                </p:layoutUnit>  
+            </p:layout>  
+        </div>
+    </h:body>
+</html>
+

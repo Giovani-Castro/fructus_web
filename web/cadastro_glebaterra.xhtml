@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formterra">
+            <p:panel id="panel" header="Cadastro de Terra" style="width: 90%">
+                <p:dataTable id="tabterra" paginator="true" value="#{glebaTerraBean.glebaterras}" var="terra" scrollHeight="250"
+                             rows="7" scrollable="true" >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{glebaTerraBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Nome" style ="width: 80px" sortBy="#{terra.nome}" filterBy="#{terra.nome}" >
+                        <h:outputText value="#{terra.nome}"/>
+                    </p:column>
+                    <p:column headerText="Cód. Incra" style ="width:60px" sortBy="#{terra.cod_incra}" filterBy="#{terra.cod_incra}" >
+                        <h:outputText value="#{terra.cod_incra}"/>
+                    </p:column>
+                    <p:column headerText="Cod. Receita" style ="width:60px" sortBy="#{terra.cod_receita}" filterBy="#{terra.cod_receita}">
+                        <h:outputText value="#{terra.cod_receita}"/>
+                    </p:column>
+                    <p:column headerText="Responsável" style ="width:100px" >
+                        <h:outputText value="#{terra.responsavel.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="Área" style ="width:50px" >
+                        <h:outputText value="#{terra.area}">
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Condição" style ="width:50px" >
+                        <h:outputText value="#{terra.condicaoFormatado}"/>
+                    </p:column>
+
+
+                    <p:column headerText="Excluir/Editar" style ="width:4px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{glebaTerraBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="glebaselecionada" value="#{terra}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{glebaTerraBean.excluir}"
+                                         update=":mensagem :formterra:tabterra">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a gleba de terra" icon="ui-icon-alert"/>
+                            <f:attribute name="glebaselecionada" value="#{terra}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Terra" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="nome" value="Terra"/>
+                    <p:inputText id="nome" value="#{glebaTerraBean.glebaterra.nome}" maxlength="50" size="40"
+                                 required="true" requiredMessage="O nome é Obrigatório"/>
+
+                    <p:outputLabel for="filial" value="Filial"/>
+                    <p:selectOneMenu id="filial" filter= "true" value="#{glebaTerraBean.glebaterra.filial}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Filial é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Filial "/>
+                        <f:selectItems value="#{glebaTerraBean.filiais}" var="filial"
+                                       itemLabel="#{filial.nome}" itemValue="#{filial}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="incra" value="Cod.Incra"/>
+                    <p:inputMask id="incra" value="#{glebaTerraBean.glebaterra.cod_incra}" mask="999999999999-9"  size="40"/>
+
+                    <p:outputLabel for="receita" value="Cod. receita" />
+                    <p:inputMask id="receita" value="#{glebaTerraBean.glebaterra.cod_receita}" mask="9.999.999-9"  size="30"/>
+
+                    <p:outputLabel for="area" value="Área" />
+                    <p:inputText id="area" value="#{glebaTerraBean.glebaterra.area}"  size="20"
+                                 required="true" requiredMessage="A área é obrigatória"
+                                 converterMessage="O valor informado para o campo área é inválido"
+                                 validatorMessage="Insira uma valor entre 0.01 a 999999.99 para o campo área">
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+                    <p:outputLabel for="aquis" value="Data Aquisição" />
+                    <p:calendar id="aquis" value="#{glebaTerraBean.glebaterra.data_aquis}"  size="10"/>
+
+                    <p:outputLabel for="dtvenda" value="Data Venda" />
+                    <p:calendar id="dtvenda" value="#{glebaTerraBean.glebaterra.data_venda}" size="10"/>
+
+                    <p:outputLabel  for="responsavel" value="Responsável"/>
+                    <p:selectOneMenu id="responsavel" filter= "true" value="#{glebaTerraBean.glebaterra.responsavel}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O responsável é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione Produtor"/>
+                        <f:selectItems value="#{glebaTerraBean.produtores}" var="produtor"
+                                       itemLabel="#{produtor.nome}" itemValue="#{produtor}"/>
+
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel  for="ativo" value="Ativa?"/>
+                    <p:selectBooleanCheckbox id="ativo" value="#{glebaTerraBean.glebaterra.ativo}"/>
+
+                    <p:outputLabel for="condicao" value="Condição"/>
+                    <p:selectOneRadio id="condicao" value="#{glebaTerraBean.glebaterra.condicao}" 
+                                      required="true" requiredMessage="Marque se a terra é própria ou arrendada">
+
+                        <f:selectItem itemValue="A" itemLabel="Arrendado"/>
+                        <f:selectItem itemValue="P" itemLabel="Própria"/>
+                    </p:selectOneRadio>
+
+                    
+
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{glebaTerraBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formterra:tabterra" />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

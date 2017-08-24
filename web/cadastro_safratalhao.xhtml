@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formtalhaosafra">
+            <p:panel id="panel" header="Cadastro de Talhao/safra" style="width: 90%">
+                <p:dataTable id="tabtalhaosafra" paginator="true" value="#{safraTalhaoBean.safratalhoes}" var="safratalhao" scrollHeight="250"
+                             rows="7"  >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{safraTalhaoBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Safra" style ="width: 20px" sortBy="#{safratalhao.safra}"  >
+                        <h:outputText value="#{safratalhao.safra.safra}"/>
+                    </p:column>
+                    <p:column headerText="Talhão" style ="width:15px" sortBy="#{safratalhao.talhao}" >
+                        <h:outputText value="#{safratalhao.talhao.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Variedade" style ="width:15px" sortBy="#{safratalhao.variedade.descricao}" filterBy="#{safratalhao.variedade.descricao}">
+                        <h:outputText value="#{safratalhao.variedade.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Grao" style ="width:10px" >
+                        <h:outputText value="#{safratalhao.variedade.idGraos.descrição}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Excluir/Editar" style ="width:4px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{safraTalhaoBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="safratalhaoselecionado" value="#{safratalhao}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{safraTalhaoBean.excluir}"
+                                         update=":mensagem :formtalhaosafra:tabtalhaosafra">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a Safra/Talhao" icon="ui-icon-alert"/>
+                            <f:attribute name="safratalhaoselecionado" value="#{safratalhao}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Safra/Talhão" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                                        
+                    <p:outputLabel for="safra" value="Safra"/>
+                    <p:selectOneMenu id="safra" filter= "true" value="#{safraTalhaoBean.safratalhao.safra}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Safra é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Safra "/>
+                        <f:selectItems value="#{safraTalhaoBean.safras}" var="safras"
+                                       itemLabel="#{safras.safra}" itemValue="#{safras}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel for="talhao" value="Talhão"/>
+                    <p:selectOneMenu id="talhao" filter= "true" value="#{safraTalhaoBean.safratalhao.talhao}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O Talhão é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o Talhão "/>
+                        <f:selectItems value="#{safraTalhaoBean.talhoes}" var="talhoes"
+                                       itemLabel="#{talhoes.descricao}" itemValue="#{talhoes}"/>
+                    </p:selectOneMenu>
+                    
+                                                 
+                    <p:outputLabel  for="grao" value="Grão"/>
+                    <p:selectOneMenu id="grao" filter= "true" value="#{safraTalhaoBean.grao}" converter="omnifaces.SelectItemsConverter">
+                                     
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o produto"/>
+                        <f:selectItems value="#{safraTalhaoBean.graos}" var="graos"
+                                       itemLabel="#{graos.descrição}" itemValue="#{graos}"/>
+                        <p:ajax listener="#{safraTalhaoBean.popular}" update=" :formdialogo:variedade"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel  for="variedade" value="Variedade"/>
+                    <p:selectOneMenu id="variedade" filter= "true" value="#{safraTalhaoBean.safratalhao.variedade}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Variedade é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Variedade "/>
+                        <f:selectItems value="#{safraTalhaoBean.variedades}" var="variedades"
+                                       itemLabel="#{variedades.descricao}" itemValue="#{variedades}"/>
+                    </p:selectOneMenu>
+                    
+                    
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{safraTalhaoBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formtalhaosafra:tabtalhaosafra"/>
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

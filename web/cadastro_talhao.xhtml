@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formtalhao">
+            <p:panel id="panel" header="Cadastro de Talhao" style="width: 90%">
+                <p:dataTable id="tabtalhao" paginator="true" value="#{talhaoBean.talhoes}" var="talhao" scrollHeight="250"
+                             rows="7"  >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{talhaoBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Descrição" style ="width: 80px" sortBy="#{talhao.descricao}" filterBy="#{talhao.descricao}" >
+                        <h:outputText value="#{talhao.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Hectares" style ="width:30px" >
+                        <h:outputText value="#{talhao.hectares}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Gleba de Terra" style ="width:80px" sortBy="#{talhao.gleba.nome}" filterBy="#{talhao.gleba.nome}">
+                        <h:outputText value="#{talhao.gleba.nome}"/>
+                    </p:column>
+
+                    <p:column headerText="Excluir/Editar" style ="width:25px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{talhaoBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="talhaoselecionado" value="#{talhao}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{talhaoBean.excluir}"
+                                         update=":mensagem :formtalhao:tabtalhao">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir o talhão" icon="ui-icon-alert"/>
+                            <f:attribute name="talhaoselecionado" value="#{talhao}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Talhão" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="descricao" value="Descrição"/>
+                    <p:inputText id="descricao" value="#{talhaoBean.talhao.descricao}" maxlength="80" size="70"
+                                 required="true" requiredMessage="A descrição é Obrigatória"/>
+
+                    <p:outputLabel for="hectares" value="Hectares"/>
+                    <p:inputText id="hectares" value="#{talhaoBean.talhao.hectares}" 
+                                 required="true" requiredMessage="A Quantidade de hectares é obrigatório"
+                                 converterMessage="O valor informado para o campo hectares é inválido"
+                                 validatorMessage="Insira um valor entre 0,01 e 999999,99 para o campo hectares">
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_Br" minFractionDigits="2" />
+
+                    </p:inputText>
+
+                    <p:outputLabel  for="gleba" value="Gleba de Terra"/>
+                    <p:selectOneMenu id="gleba" filter= "true" value="#{talhaoBean.talhao.gleba}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A gleba de terra é obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione Gleba de Terra"/>
+                        <f:selectItems value="#{talhaoBean.glebaterras}" var="gleba"
+                                       itemLabel="#{gleba.nome}" itemValue="#{gleba}"/>
+
+                    </p:selectOneMenu>
+
+
+                    
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{talhaoBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formtalhao:tabtalhao" />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

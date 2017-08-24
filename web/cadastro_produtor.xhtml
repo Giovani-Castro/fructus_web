@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formprodutor">
+            <p:panel id="panel" header="Cadastro de Produtores" style="width: 90%">
+                <p:dataTable id="tabprodutor" paginator="true" value="#{produtorBean.produtores}" var="produtor" scrollHeight="250"
+                             rows="7" scrollable="true" >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{produtorBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Nome" style ="width: 80px" sortBy="#{produtor.nome}"  filterBy="#{produtor.nome}" >
+                        <h:outputText value="#{produtor.nome}"/>
+                    </p:column>
+                    <p:column headerText="CPF" style ="width:60px"  >
+                        <h:outputText value="#{produtor.cpf}"/>
+                    </p:column>
+                    <p:column headerText="Celular" style ="width:60px" >
+                        <h:outputText value="#{produtor.celular}"/>
+                    </p:column>
+                    <p:column headerText="Email" style ="width:100px" >
+                        <h:outputText value="#{produtor.email}"/>
+                    </p:column>
+
+                    <p:column headerText="Excluir/Editar" style ="width:4px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{produtorBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="produtorselecionado" value="#{produtor}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{produtorBean.excluir}"
+                                         update=":mensagem :formprodutor:tabprodutor">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a Filial" icon="ui-icon-alert"/>
+                            <f:attribute name="produtorselecionado" value="#{produtor}"/>
+                        </p:commandButton>
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de produtor" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="nome" value="Nome"/>
+                    <p:inputText id="nome" value="#{produtorBean.produtor.nome}" maxlength="50" size="40"
+                                 required="true" requiredMessage="O nome é Obrigatório"/>
+
+                    <p:outputLabel for="cpf" value="CPF"/>
+                    <p:inputMask id="cpf" value="#{produtorBean.produtor.cpf}" mask="999.999.999-99" size="8"
+                                 required="true" requiredMessage="O CPF é Obrigatório"/>
+
+                    <p:outputLabel for="Bairro" value="Bairro"/>
+                    <p:inputText id="Bairro" value="#{produtorBean.produtor.bairro}" maxlength="70" size="40"/>
+
+                    <p:outputLabel for="Lograd" value="Logradouro" />
+                    <p:inputText id="Lograd" value="#{produtorBean.produtor.logradouro}" maxlength="70" size="30"/>
+
+                    <p:outputLabel for="Complem" value="Complemento" />
+                    <p:inputText id="Complem" value="#{produtorBean.produtor.complemento}" maxlength="50" size="20"/>
+
+                    <p:outputLabel for="Numero" value="Numero" />
+                    <p:inputText id="Numero" value="#{produtorBean.produtor.numero}" maxlength="10" size="10"/>
+
+
+                    <p:outputLabel  for="estado" value="Estado"/>
+                    <p:selectOneMenu id="estado" filter= "true" value="#{produtorBean.estado}" converter="omnifaces.SelectItemsConverter">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione Estado"/>
+                        <f:selectItems value="#{produtorBean.estados}" var="estado"
+                                       itemLabel="#{estado.descricao}" itemValue="#{estado}"/>
+                        <p:ajax listener="#{produtorBean.popular}" update=" :formdialogo:cidade"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel  for="cidade" value="Cidade"/>
+                    <p:selectOneMenu id="cidade" filter= "true" value="#{produtorBean.produtor.cidade}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Cidade é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Cidade "/>
+                        <f:selectItems value="#{produtorBean.cidades}" var="cidade"
+                                       itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel  for="cep" value="Cep"/>
+                    <p:inputMask id="cep" value="#{produtorBean.produtor.cep}" mask="99.999-999" size="10"/>
+
+                    <p:outputLabel for="telefone" value="Telefone"/>
+                    <p:inputMask id="telefone" value="#{produtorBean.produtor.telefone}" mask="(999)9999-9999"  size="10"/>
+
+                    <p:outputLabel for="celular" value="Celular"/>
+                    <p:inputMask id="celular" value="#{produtorBean.produtor.celular}" mask="(999)99999-9999" size="10"/>
+
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{produtorBean.produtor.email}" maxlength="90" size="50"/>
+
+
+
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{produtorBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formprodutor:tabprodutor"/>
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

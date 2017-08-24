@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/graos?zeroDateTimeBehavior=convertToNull</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">fante901</property>
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <mapping class="br.fructus.entity.UniMed"/>
+    <mapping class="br.fructus.entity.Graos"/>
+    <mapping class="br.fructus.entity.Estado"/>
+    <mapping class="br.fructus.entity.Cidade"/>
+    <mapping class="br.fructus.entity.Fazenda"/>
+    <mapping class="br.fructus.entity.Filial"/>
+    <mapping class="br.fructus.entity.Gleba_Terra"/>
+    <mapping class="br.fructus.entity.Parceria"/>
+    <mapping class="br.fructus.entity.Produtor"/>
+    <mapping class="br.fructus.entity.Talhao"/>
+    <mapping class="br.fructus.entity.Safra"/>
+    <mapping class="br.fructus.entity.Variedade"/>
+    <mapping class="br.fructus.entity.SafraTalhao"/>
+    <mapping class="br.fructus.entity.Deposito"/>
+    <mapping class="br.fructus.entity.Colheita"/>
+  </session-factory>
+</hibernate-configuration>

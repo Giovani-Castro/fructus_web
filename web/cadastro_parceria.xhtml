@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formparceria">
+            <p:panel id="panel" header="Cadastro de Parceria" style="width: 90%">
+                <p:dataTable id="tabparceria" paginator="true" value="#{parceriaBean.parcerias}" var="parceria" scrollHeight="250"
+                             rows="7" scrollable="true" >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{parceriaBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Produtor" style ="width: 70px" sortBy="#{parceria.produtor.nome}" filterBy="#{parceria.produtor.nome}" >
+                        <h:outputText value="#{parceria.produtor.nome}"/>
+                    </p:column>
+                    <p:column headerText="Gleba Terra" style ="width:60px" sortBy="#{parceria.gleba.nome}" filterBy="#{parceria.gleba.nome}" >
+                        <h:outputText value="#{parceria.gleba.nome}"/>
+                    </p:column>
+                    <p:column headerText="Part. Receita" style ="width:20px" >
+                        <h:outputText value="#{parceria.part_receita}">
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Part. Despesa" style ="width:20px" >
+                        <h:outputText value="#{parceria.part_desp}">
+                            <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+
+                    <p:column headerText="Excluir/Editar" style ="width:25px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{parceriaBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="parcerialecionada" value="#{parceria}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{parceriaBean.excluir()}"
+                                         update=":mensagem :formparceria:tabparceria">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a parceria" icon="ui-icon-alert"/>
+                            <f:attribute name="parceriaselecionada" value="#{parceria}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Parceria" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="produtor" value="Produtor"/>
+                    <p:selectOneMenu id="produtor" filter= "true" value="#{parceriaBean.parceria.produtor}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O produtor é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o Produtor "/>
+                        <f:selectItems value="#{parceriaBean.produtores}" var="produtor"
+                                       itemLabel="#{produtor.nome}" itemValue="#{produtor}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="terra" value="Gleba Terra"/>
+                    <p:selectOneMenu id="terra" filter= "true" value="#{parceriaBean.parceria.gleba}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Gleba de Terra é obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Gleba de Terra "/>
+                        <f:selectItems value="#{parceriaBean.glebaterras}" var="terra"
+                                       itemLabel="#{terra.nome}" itemValue="#{terra}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel for="receita" value="Part. Receita" />
+                    <p:inputText id="receita" value="#{parceriaBean.parceria.part_receita}"  size="20"
+                                 required="true" requiredMessage="A participação é obrigatória"
+                                 converterMessage="O valor informado para o campo part. da receita é inválido"
+                                 validatorMessage="Insira uma valor entre 0,00 a 100,00 para o campo área">
+                        <f:validateDoubleRange minimum="0.00" maximum="100.00"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="despesa" value="Part. Despesa" />
+                    <p:inputText id="despesa" value="#{parceriaBean.parceria.part_desp}"  size="20"
+                                 required="true" requiredMessage="A participação é obrigatória"
+                                 converterMessage="O valor informado para o campo part. da receita é inválido"
+                                 validatorMessage="Insira uma valor entre 0,00 a 100,00 para o campo área">
+                        <f:validateDoubleRange minimum="0.00" maximum="100.00"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="inicio" value="Data Início" />
+                    <p:calendar id="inicio" value="#{parceriaBean.parceria.data_inic}"  size="15"/>
+
+                    <p:outputLabel for="final" value="Data Fim" />
+                    <p:calendar id="final" value="#{parceriaBean.parceria.data_final}" size="15"/>
+
+                    <p:outputLabel  for="ativo" value="Ativo?"/>
+                    <p:selectBooleanCheckbox id="ativo" value="#{parceriaBean.parceria.ativo}"/>
+
+                    
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{parceriaBean.salvar()}" update=" :mensagem :formdialogo:paineldialogo :formparceria:tabparceria" />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

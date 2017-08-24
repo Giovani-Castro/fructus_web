@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formsafra">
+            <p:panel id="panel" header="Cadastro de Safra" style="width: 90%">
+                <p:dataTable id="tabsafra" paginator="true" value="#{safraBean.safras}" var="safra" scrollHeight="250"
+                             rows="7" scrollable="true" >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{safraBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Nome" style ="width: 70px" sortBy="#{safra.safra}" filterBy="#{safra.safra}" >
+                        <h:outputText value="#{safra.safra}"/>
+                    </p:column>
+                    <p:column headerText="Ano Início" style ="width:40px" sortBy="#{safra.ano_inicio}" filterBy="#{safra.ano_inicio}" >
+                        <h:outputText value="#{safra.ano_inicio}" />
+                    </p:column>
+                    <p:column headerText="Ano Fim" style ="width:40px" >
+                        <h:outputText value="#{safra.ano_fim}"/>
+
+                    </p:column>
+
+                    <p:column headerText="Excluir/Editar" style ="width:25px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{safraBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="safraselecionada" value="#{safra}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{safraBean.excluir}"
+                                         update=":mensagem :formsafra:tabsafra">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a safra" icon="ui-icon-alert"/>
+                            <f:attribute name="safraselecionada" value="#{safra}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Safras" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="safra" value="Nome Safra"/>
+
+                    <p:inputText id="safra" value="#{safraBean.safra.safra}"  size="40"
+                                 required="true" requiredMessage="O nome da safra é obrigatório"/>
+
+
+                    
+                    <p:outputLabel for="inicio" value="Data Início" />
+                    <p:calendar id="inicio" value="#{safraBean.safra.ano_inicio}"  size="15"
+                                locale="pt_BR" required="true" requiredMessage="A data de início é obrigatória"/>
+
+                    <p:outputLabel for="final" value="Data Fim" />
+                    <p:calendar id="final" value="#{safraBean.safra.ano_fim}" size="15" 
+                                locale="pt_BR" required="true" requiredMessage="A data final é obrigatória"/>
+
+                    
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{safraBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formsafra:tabsafra" />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

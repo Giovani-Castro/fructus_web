@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formvariedade">
+            <p:panel id="panel" header="Cadastro de Variedade de Grãos" style="width: 90%">
+                <p:dataTable id="tabvariedade" paginator="true" value="#{variedadeBean.variedades}" var="variedade" scrollHeight="250"
+                             rows="7"  >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{variedadeBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Descrição" style ="width: 80px" sortBy="#{variedade.descricao}" filterBy="#{variedade.descricao}" >
+                        <h:outputText value="#{variedade.descricao}"/>
+                    </p:column>
+                    <p:column headerText="Grão" style ="width:50px" sortBy="#{variedade.idGraos.descrição}" filterBy="#{variedade.idGraos.descrição}">
+                        <h:outputText value="#{variedade.idGraos.descrição}"/>
+                    </p:column>
+                          
+                    
+                    <p:column headerText="Excluir/Editar" style ="width:25px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{variedadeBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="variedadeselecionada" value="#{variedade}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{variedadeBean.excluir}"
+                                         update=":mensagem :formvariedade:tabvariedade">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a variedade" icon="ui-icon-alert"/>
+                            <f:attribute name="variedadeselecionada" value="#{variedade}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Variedade de Grãos" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="descricao" value="Descrição"/>
+                    <p:inputText id="descricao" value="#{variedadeBean.variedade.descricao}" maxlength="70" size="30"
+                                 required="true" requiredMessage="A descrição é Obrigatória"/>
+
+                    
+                    <p:outputLabel  for="grao" value="Grão"/>
+                    <p:selectOneMenu id="grao" filter= "true" value="#{variedadeBean.variedade.idGraos}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O grão é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o grão"/>
+                        <f:selectItems value="#{variedadeBean.graos}" var="grao"
+                                       itemLabel="#{grao.descrição}" itemValue="#{grao}"/>
+
+                    </p:selectOneMenu>
+
+
+                    
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{variedadeBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formvariedade:tabvariedade" />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>
+

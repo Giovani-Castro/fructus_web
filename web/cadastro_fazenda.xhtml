@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formfaz">
+            <p:panel id="panel" header="Cadastro de Fazendas" style="width: 90%">
+                <p:dataTable id="tabfaz" paginator="true" value="#{fazendaBean.fazendas}" var="fazenda" scrollHeight="250" rows="7">
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{fazendaBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Id" style ="width: 3px" sortBy="#{fazenda.codigo}" >
+                        <h:outputText value="#{fazenda.codigo}"/>
+                    </p:column>
+                    <p:column headerText="Cidade" style ="width:40px" sortBy="#{fazenda.nome}" filterBy="#{fazenda.nome}">
+                        <h:outputText value="#{fazenda.nome}"/>
+                    </p:column>
+                    <p:column headerText="Nome Fantasia" style ="width:4px" sortBy="#{fazenda.nome_fantasia}" filterBy="#{fazenda.nome_fantasia}">
+                        <h:outputText value="#{fazenda.nome_fantasia}"/>
+                    </p:column>
+                    <p:column headerText="Excluir/Editar" style ="width:4px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{fazendaBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="fazendaselecionada" value="#{fazenda}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{fazendaBean.excluir}"
+                                         update=":mensagem :formfaz:tabfaz">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a Fazenda" icon="ui-icon-alert"/>
+                            <f:attribute name="fazendaselecionada" value="#{fazenda}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Fazendas" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="Fazenda" value="Nome Fazenda"/>
+                    <p:inputText id="Fazenda" value="#{fazendaBean.fazenda.nome}" maxlength="50" size="30"
+                                 required="true" requiredMessage="A Fazenda é Obrigatória"/>
+
+                    <p:outputLabel  for="fantasia" value="Nome Fantasia"/>
+                    <p:inputText id="fantasia" value="#{fazendaBean.fazenda.nome_fantasia}" maxlength="50" size="30" ></p:inputText>
+                                  
+                    <p:outputLabel  for="cpf" value="cpf"/>
+                    <p:inputMask id="cpf" value="#{fazendaBean.fazenda.cpf}" mask="999.999.999-99"  size="10"></p:inputMask>
+                    
+                    <p:outputLabel  for="cnpj" value="cnpj"/>
+                    <p:inputMask id="cnpj" value="#{fazendaBean.fazenda.cnpj}" size="15" mask="99.999.999/9999-99"></p:inputMask>
+                  
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{fazendaBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formfaz:tabfaz"/>
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

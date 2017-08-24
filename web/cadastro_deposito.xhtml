@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="formdeposito">
+            <p:panel id="panel" header="Cadastro de Depósitos" style="width: 90%">
+                <p:dataTable id="tabdeposito" paginator="true" value="#{depositoBean.depositos}" var="deposito" scrollHeight="250"
+                             rows="7"  >
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();"  actionListener="#{depositoBean.novo}"
+                                         update=":mensagem :formdialogo:paineldialogo">
+
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>  
+
+                    <p:column headerText="Nome" style ="width: 40px" sortBy="#{deposito.nome}"  >
+                        <h:outputText value="#{deposito.nome}"/>
+                    </p:column>
+                    <p:column headerText="Cidade" style ="width:25px" sortBy="#{deposito.cidade.nome}" filterBy="#{deposito.cidade.nome}">
+                        <h:outputText value="#{deposito.cidade.nome}"/>
+                    </p:column>
+                    <p:column headerText="Telefone" style ="width:15px" >
+                        <h:outputText value="#{deposito.telefone}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Excluir/Editar" style ="width:4px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{depositoBean.editar}"
+                                         update=" :formdialogo:paineldialogo"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="depositoselecionado" value="#{deposito}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{depositoBean.excluir}"
+                                         update=":mensagem :formdeposito:tabdeposito">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir o deposito" icon="ui-icon-alert"/>
+                            <f:attribute name="depositoselecionado" value="#{deposito}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable> 
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+
+            </p:panel>
+
+        </h:form>
+        <p:dialog header="Cadastro de Depósito" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="deposito" value="Nome do Depósito"/>
+                    <p:inputText id="deposito" value="#{depositoBean.deposito.nome}" maxlength="50" size="40"
+                                 required="true" requiredMessage="O nome é Obrigatório"/>
+                                                          
+                    <p:outputLabel for="bairro" value="Bairro"/>
+                    <p:inputText id="bairro" value="#{depositoBean.deposito.bairro}" maxlength="70" size="40"/>
+
+                    <p:outputLabel for="lograd" value="Logradouro" />
+                    <p:inputText id="lograd" value="#{depositoBean.deposito.logradouro}" maxlength="70" size="30"/>
+                    
+                    <p:outputLabel for="numero" value="Número" />
+                    <p:inputText id="numero" value="#{depositoBean.deposito.numero}" maxlength="10" size="10"/>
+                    
+                    <p:outputLabel for="complemento" value="Complemento" />
+                    <p:inputText id="complemento" value="#{depositoBean.deposito.complemento}" maxlength="30" size="40"/>
+                    
+                                      
+                    <p:outputLabel  for="estado" value="Estado"/>
+                    <p:selectOneMenu id="estado" filter= "true" value="#{depositoBean.estado}" converter="omnifaces.SelectItemsConverter">
+                                     
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione Estado"/>
+                        <f:selectItems value="#{depositoBean.estados}" var="estado"
+                                       itemLabel="#{estado.descricao}" itemValue="#{estado}"/>
+                        <p:ajax listener="#{depositoBean.popular}" update=" :formdialogo:cidade"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel  for="cidade" value="Cidade"/>
+                    <p:selectOneMenu id="cidade" filter= "true" value="#{depositoBean.deposito.cidade}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="A Cidade é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione a Cidade "/>
+                        <f:selectItems value="#{depositoBean.cidades}" var="cidade"
+                                       itemLabel="#{cidade.nome}" itemValue="#{cidade}"/>
+                    </p:selectOneMenu>
+                    
+                    <p:outputLabel  for="cep" value="Cep"/>
+                    <p:inputMask id="cep" value="#{depositoBean.deposito.cep}" mask="99.999-999" size="10"/>
+                    
+                    <p:outputLabel for="telefone" value="Telefone"/>
+                    <p:inputMask id="telefone" value="#{depositoBean.deposito.telefone}" mask="(999)9999-9999"  size="10"/>
+                    
+                    <p:outputLabel for="celular" value="Celular"/>
+                    <p:inputMask id="celular" value="#{depositoBean.deposito.celular}" mask="(999)99999-9999" size="12"/>
+                    
+                    <p:outputLabel for="email" value="Email"/>
+                    <p:inputText id="email" value="#{depositoBean.deposito.email}" maxlength="90" size="50"/>
+                    
+                                        
+
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{depositoBean.salvar}" update=" :mensagem :formdialogo:paineldialogo :formdeposito:tabdeposito"/>
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

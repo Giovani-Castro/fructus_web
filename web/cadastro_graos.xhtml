@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+    <ui:define name="centro">
+        <h:form id="formgrao">
+            <h1 style="margin-top: 0">Cadastro de Grãos</h1>
+
+            <p:panel id="panel" header="Cadastro de Gãos" style="width: 80%">
+                <p:dataTable id="tabgrao" value="#{graosBean.listagrao}" var="graos" paginator="true" scrollHeight="250" rows="7">
+                    <f:facet name="header">
+                        <p:commandButton value="Novo" oncomplete="PF('dialogo').show();" actionListener="#{graosBean.listarUnida()}"
+                                         update=" :formcadastro:painelcadastro">
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                    </f:facet>
+                    <p:column headerText="Id" style="width: 5px" sortBy="#{graos.idGraos}">
+                        <h:outputText value="#{graos.idGraos}"/>
+                    </p:column>
+                    <p:column headerText="Descrição" style="width: 30px" sortBy="#{graos.descrição}" filterBy="#{graos.descrição}">
+                        <h:outputText value="#{graos.descrição}"/>
+                    </p:column>
+                    <p:column headerText="Unidade" style="width: 30px">
+                        <h:outputText value="#{graos.unidade.unidade}"/>
+                    </p:column>
+                    <p:column headerText="Excluir/Editar" style="width: 10px">
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{graosBean.exxcluirGrao}"  update=":formgrao:tabgrao :msgGlobal" >
+                            <f:attribute name="graoselecionado" value="#{graos}"/>
+                            <p:confirm header="Confirmação" message="Confirma exclusão do Grão?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{graosBean.editar}"  update=":formcadastro:painelcadastro"
+                                         oncomplete="PF('dialogo').show();" >
+                            <f:attribute name="graoeditado" value="#{graos}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+
+                    </p:column>
+                </p:dataTable>
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+            </p:panel>
+        </h:form>
+
+        <p:dialog header="Cadastro de Grãos" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formcadastro">
+
+                <h:panelGrid id="painelcadastro" columns="2"  style="margin:10px 0">
+                    <p:outputLabel value="Descrição"/>
+                    <p:inputText id="Descrição" value="#{graosBean.grao.descrição}" maxlength="20" size="30"
+                                 required="true" requiredMessage="A descrição é Obrigatória"/>
+
+                    <p:outputLabel value="Unidade"/>
+                    <p:selectOneMenu  filter= "true" value="#{graosBean.grao.unidade}" converter="graosConverter"
+                                      required="true" requiredMessage="A unidade é Obrigatória">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione Unidade"/>
+                        <f:selectItems value="#{graosBean.unida}" var="unidade"
+                                       itemLabel="#{unidade.descricao}" itemValue="#{unidade}"/>
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" action="#{graosBean.adicionarGraos()}" update=" :formgrao:tabgrao formcadastro:painelcadastro :msgGlobal"/>
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>

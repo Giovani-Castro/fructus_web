@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+
+    <ui:define name="centro">
+        <h:form id="form"> 
+            <h1 style="margin-top:0">Cadastro Unidade de Medida</h1>
+            <h:panelGrid id="painel" columns="4" style="margin:10px 0"  >
+                <p:outputLabel value="Unidade" />
+                <p:inputText id="Unidade" value="#{novoUniMedBean.unimed.unidade}"  required="true" requiredMessage="O campo 'Unidade' é obrigatótio" size="10"/>
+                <p:outputLabel value="Descrição:"/>
+                <p:inputText id="Descrição" value="#{novoUniMedBean.unimed.descricao}" size="30" required="true" requiredMessage="o campo 'Descrição' é obrigatório"/>
+                <p:commandButton value="Salvar" action="#{novoUniMedBean.adicionarUniMed()}" update =":form:tabe :form:painel :msgGlobal"  />
+
+            </h:panelGrid>
+            <p:panel  header="Cadastro de Unidade de Medida" style="width: 80%">
+
+                <p:dataTable id="tabe" value="#{novoUniMedBean.listaUniMed}" var="pateta" scrollable="true" scrollHeight="250"  >
+                    <p:column headerText="Unidade"   style=" width: 5px" sortBy="#{pateta.unidade}">
+                        <h:outputText value="#{pateta.unidade}"/>
+                    </p:column>
+
+                    <p:column headerText="Descrição"  style="width: 40px" sortBy="#{pateta.descricao}">
+                        <h:outputText value="#{pateta.descricao}"/>
+                    </p:column>
+
+                    <p:column headerText="Excluir" style="width: 10px">
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{novoUniMedBean.excluir}"  update=":form:tabe" >
+                            <f:attribute name="unidadeselecionada" value="#{pateta}"/>
+                            <p:confirm header="Confirmação" message="Confirma exclusão da unidade?" icon="ui-icon-alert"/>
+                        </p:commandButton>
+
+                    <p:commandButton icon="ui-icon-pencil" actionListener="#{novoUniMedBean.editar}"
+                                     oncomplete="PF('dialogo').show();" update=" :formeditar:paineleditar :msgGlobal">
+                        <f:attribute name="unidadeselecionada" value="#{pateta}"/> 
+
+                    </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+            </p:panel>
+        </h:form>
+        <p:dialog header="Altera Unidae Medida" widgetVar="dialogo" draggable="false" resizable="false" modal="false">
+            <h:form id="formeditar">
+                <h:panelGrid id="paineleditar">
+                    
+                <p:outputLabel value="Descrição"/>
+                <p:inputText maxlength="15" size="30" value="#{novoUniMedBean.unidade.descricao}"/>
+                <p:commandButton value="salvar" actionListener="#{novoUniMedBean.editarUni()}" update=" :formeditar:paineleditar :form:tabe :msgGlobal"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:decorate>
