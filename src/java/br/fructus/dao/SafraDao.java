@@ -6,4 +6,4 @@ import br.fructus.entity.Safra;
 
 public class SafraDao extends GenericDao <Safra>{
     
-}
+    }

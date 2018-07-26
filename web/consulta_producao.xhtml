@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<ui:decorate xmlns="http://www.w3.org/1999/xhtml"
+             xmlns:h="http://java.sun.com/jsf/html"
+             xmlns:p="http://primefaces.org/ui"
+             xmlns:f="http://java.sun.com/jsf/core"
+             xmlns:ui="http://java.sun.com/jsf/facelets"
+             template="index.xhtml">
+
+    <ui:define name="centro">
+        <p:growl id="mensagem"/>
+        <h:form id="consgrao">
+            <p:panel id="consulta" header="Consulta Produção" style="width: 90%">
+                <h:panelGrid id="pesquisa" columns="4" style="margin: 10px">
+                    <p:outputLabel for="grao" value="Produto"/>
+                    <p:selectOneMenu id="grao" filter= "true" value="#{consultaProducaoBean.colheita.safra.variedade.idGraos.idGraos}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="Informe o produto a ser consultado">            
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o Grão"/>
+                        <f:selectItems value="#{consultaProducaoBean.graos}" var="grao"
+                                       itemLabel="#{grao.descrição}" itemValue="#{grao.idGraos}"/>
+
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="safratalhao" value="Safra"/>
+                    <p:selectOneMenu id="safratalhao" value="#{consultaProducaoBean.colheita.safra.safra.safra}"  converter="omnifaces.SelectItemsConverter" 
+                                     required="true" requiredMessage="Informe a safra a ser consultada">             
+                        <f:selectItem noSelectionOption="true"  itemLabel="Selecione a safra"  />
+                        <f:selectItems value="#{consultaProducaoBean.safras}" var="safra"
+                                       itemLabel="#{safra.safra} "
+                                       itemValue="#{safra.safra}"/>
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel for="talhao" value="Talhão"/>
+                    <p:selectOneMenu id="talhao" value="#{consultaProducaoBean.colheita.safra.talhao.descricao}"  converter="omnifaces.SelectItemsConverter" >
+                        <f:selectItem noSelectionOption="true"  itemLabel="Selecione o Talhão"  />
+                        <f:selectItems value="#{consultaProducaoBean.talhoes}" var="talhoes"
+                                       itemLabel="#{talhoes.descricao} "
+                                       itemValue="#{talhoes.descricao}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="deposito" value="Deposito"/>
+                    <p:selectOneMenu id="deposito" value="#{consultaProducaoBean.colheita.deposito.nome}"  converter="omnifaces.SelectItemsConverter" >
+                        <f:selectItem noSelectionOption="true"  itemLabel="Selecione o Depósito"  />
+                        <f:selectItems value="#{consultaProducaoBean.depositos}" var="depositos"
+                                       itemLabel="#{depositos.nome} "
+                                       itemValue="#{depositos.nome}"/>
+                    </p:selectOneMenu>
+
+                </h:panelGrid>
+
+                <h:panelGrid id="botoes" columns="2" style="margin: 10px">
+
+                    <p:commandButton value="consultar" actionListener="#{consultaProducaoBean.filtrar}" update=":mensagem :consultag:consafra :consultag:calcular"/>
+                    <p:commandButton value="nova consulta"/>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+
+        <h:form id="consultag">
+
+            <p:panel id="panel" header="Consulta Safra" style="width: 90%">
+                <p:dataTable id="consafra" paginator="true" value="#{consultaProducaoBean.colheitas}" var="colheita"
+                             scrollHeight="450" rows="10" scrollable="true">
+                    <p:column headerText="Produto" style="width: 40px">
+                        <h:outputText value="#{colheita.safra.variedade.idGraos.descrição}"/>
+                    </p:column>
+
+                    <p:column headerText="Variedade" style="width: 20px">
+                        <h:outputText value="#{colheita.safra.variedade.descricao}"/>
+                    </p:column>
+
+                    <p:column headerText="Peso bruto" style="width: 20px">
+                        <h:outputText value="#{colheita.pesob}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+
+                    </p:column>
+
+                    <p:column headerText="tara" style="width: 20px">
+                        <h:outputText value="#{colheita.tara}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Impureza" style="width: 20px">
+                        <h:outputText value="#{colheita.impureza}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Umidade" style="width: 20px">
+                        <h:outputText value="#{colheita.umidade}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Peso Líquido" style="width: 30px">
+                        <h:outputText value="#{colheita.pesoliq}">
+                            <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Excluir/Editar" style ="width:25px">
+                        <p:commandButton icon="ui-icon-pencil" actionListener="#{consultaProducaoBean.editar}"
+                                         update=" :formdialogo:painelcolheita"
+                                         oncomplete="PF('dialogo').show();">
+                            <f:attribute name="colheitaselecionada" value="#{colheita}"/>
+                            <f:actionListener type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-trash" actionListener="#{consultaProducaoBean.excluir}"
+                                         update=" :mensagem :consultag:consafra">
+
+                            <p:confirm header="Confirmação" message="Deseja Excluir a safra" icon="ui-icon-alert"/>
+                            <f:attribute name="colheitaselecionada" value="#{colheita}"/>
+                        </p:commandButton>
+
+
+                    </p:column>
+
+                </p:dataTable>
+                
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                </p:confirmDialog>
+                
+            </p:panel>
+            
+            <p:panel header="Total Colhido" style="width: 90%">
+                <h:panelGrid id="calcular" columns="4"  style=" margin-top: 10px; margin-right: 50px;  ">
+                    <p:outputLabel value="Total Bruto - " style=" font-weight:  bold" />
+                    <h:outputText value="#{consultaProducaoBean.colheita.pesob}" style="margin-right: 20px; font-weight:  bold ">
+                        <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                    </h:outputText>
+                
+                    <p:outputLabel value="Total Líquido - " style=" font-weight:  bold"/>
+                <h:outputText value="#{consultaProducaoBean.colheita.pesoliq}" style="font-weight:   bold ">
+                    <f:convertNumber locale="pt_Br" minFractionDigits="2"/>
+                </h:outputText>
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
+
+
+        <p:dialog header="Altera Colheita" widgetVar="dialogo" draggable="false"
+                  resizable="false" modal="false">
+
+            <h:form id="formdialogo">
+                <h:panelGrid id="painelcolheita" columns="2"  style="margin:10px 0">
+                    <p:outputLabel for="data" value="Data"/>
+                    <p:calendar id="data" value="#{consultaProducaoBean.colheita.data}"  size="15"
+                                locale="pt_BR"
+                                required="true" requiredMessage="A data é Obrigatória"/>
+
+                    <p:outputLabel for="placa" value="Placa"/>
+                    <p:inputText id="placa" value="#{consultaProducaoBean.colheita.placa}" maxlength="7" size="10"/>
+
+                    <p:outputLabel for="documento" value="Documento"/>
+                    <p:inputText id="documento" value="#{consultaProducaoBean.colheita.documento}" maxlength="7" size="10"/>
+
+                    <p:outputLabel  for="grao" value="Grão"/>
+                    <p:selectOneMenu id="grao" filter= "true" value="#{consultaProducaoBean.grao}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O grão é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o grão"/>
+                        <f:selectItems value="#{consultaProducaoBean.graos}" var="grao"
+                                       itemLabel="#{grao.descrição}" itemValue="#{grao}"/>
+                        <p:ajax listener="#{consultaProducaoBean.popular}" update=" :formdialogo:safratalhao"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="safratalhao" value="Safra/Talhao"/>
+                    <p:selectOneMenu id="safratalhao" value="#{consultaProducaoBean.colheita.safra}"  converter="omnifaces.SelectItemsConverter" 
+                                     required="true" requiredMessage="A Safra e o Talhão são obigatórios">
+                        <f:selectItem noSelectionOption="true"  itemLabel="Selecione a safra e o talhão"  />
+                        <f:selectItems value="#{consultaProducaoBean.safratalhoes}" var="safratalhao"
+                                       itemLabel="#{safratalhao.safra.safra} - #{safratalhao.talhao.descricao}"
+                                       itemValue="#{safratalhao}"/>
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="pesob" value="Peso Bruto"/>
+                    <p:inputText id="pesob" value="#{consultaProducaoBean.colheita.pesob}" size="15"
+                                 required="true" requiredMessage="O peso bruto é obigatório"
+                                 converterMessage="O valor informado para o campo peso bruto é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para o peso bruto" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="impureza" value="Impureza"/>
+                    <p:inputText id="impureza" value="#{consultaProducaoBean.colheita.impureza}" size="15"
+                                 converterMessage="O valor informado para o campo impureza é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para a impureza" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="umidade" value="Umidade"/>
+                    <p:inputText id="umidade" value="#{consultaProducaoBean.colheita.umidade}" size="15"
+                                 converterMessage="O valor informado para o campo umidade é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para a umidade" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="odc" value="Outros Descontos"/>
+                    <p:inputText id="odc" value="#{consultaProducaoBean.colheita.outdesc}" size="15"
+                                 converterMessage="O valor informado para o campo outros descontos é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para outros descontos" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="tara" value="Tara"/>
+                    <p:inputText id="tara" value="#{consultaProducaoBean.colheita.tara}" size="15"
+                                 converterMessage="O valor informado para o campo tara é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para a tara" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99"/>
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="pesol" value="Peso Líquido"/>
+                    <p:inputText id="pesol" value="#{consultaProducaoBean.colheita.pesoliq}" size="15"
+                                 required="true" requiredMessage="O peso líquido é obigatório"
+                                 converterMessage="O valor informado para o campo peso líquido é inválido"
+                                 validatorMessage="insira um valor entre 0,01 e 999.999,99 para o peso líquido" >
+
+                        <f:validateDoubleRange minimum="0.01" maximum="999999.99" />
+                        <f:convertNumber locale="pt_BR" minFractionDigits="2"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="deposito" value="Unidade de Depósito"/>
+                    <p:selectOneMenu id="deposito" value="#{consultaProducaoBean.colheita.deposito}" converter="omnifaces.SelectItemsConverter"
+                                     required="true" requiredMessage="O depósito é obrigatório">
+
+                        <f:selectItem noSelectionOption="true" itemLabel="Selecione o Depósito"/>
+                        <f:selectItems value="#{consultaProducaoBean.depositos}" var="depositos"
+                                       itemLabel="#{depositos.nome}" itemValue="#{depositos}"/>
+                    </p:selectOneMenu>
+
+
+                </h:panelGrid>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{consultaProducaoBean.salvar}" update=" :mensagem :formdialogo:painelcolheita :consultag:consafra " />
+                    <p:commandButton value="fechar" oncomplete="PF('dialogo').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+
+    </ui:define>
+</ui:decorate>
