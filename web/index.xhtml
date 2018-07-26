@@ -9,14 +9,15 @@
         <title> Projeto Fructus</title>
         <style type="text/css">
             body {background-color:forestgreen; font-size: 12px}
+            
         </style> 
     </h:head>
     <h:body>
         <div align="center">
-            <p:layout style="min-width:1020px;max-width:1020px;min-height:600px">  
+            <p:layout style="min-width:1020px;max-width:1020px;min-height:630px">  
                 <p:growl id="msgGlobal" life="5000"/>
                 <p:layoutUnit position="north" size="100">  
-                    <img src="Imagem/condominio.png"></img>
+                    <img src="Imagem/Fructuslogo.png"></img>
                 </p:layoutUnit>  
 
                 <p:layoutUnit position="west" size="220">  
@@ -24,8 +25,9 @@
                         <h:form>
                             <p:menu toggleable="true">
                                 <p:submenu label="Cadastros">
+                                    <p:menuitem value="Usuários"  icon="ui-icon-person" url="cadastro_usuario.xhtml"/>
                                     <p:menuitem value="Clientes"  icon="ui-icon-person" url="index.xhtml"/>
-                                    <p:menuitem value="Fornecedores"  icon="ui-icon-person" url="teste.xhtml"/>
+                                    <p:menuitem value="Fornecedores"  icon="ui-icon-person" url="consulta_clifor.xhtml"/>
                                     <p:menuitem value ="Cidades" icon="ui-icon-home" url="cadastro_cidade.xhtml"/>
                                     <p:menuitem value="Fazendas" icon="ui-icon-person" url="cadastro_fazenda.xhtml"/>
                                     <p:menuitem value="Filiais" icon="ui-icon-person" url="cadastro_filial.xhtml"/>
@@ -41,7 +43,7 @@
                                     <p:menuitem value ="Talhão" icon="ui-icon-home" url="cadastro_talhao.xhtml"/>
                                     <p:menuitem value ="Safra/Talhao" icon="ui-icon-home" url="cadastro_safratalhao.xhtml"/>
                                     <p:separator />
-                                    <p:menuitem value ="CFOP" icon="ui-icon-home"/>
+                                    <p:menuitem value ="CFOP" icon="ui-icon-home" url="impoftanfe.xhtml" />
                                     <p:menuitem value ="Modelo de Documento" icon="ui-icon-home"/>
                                     <p:menuitem value ="Natureza da operação" icon="ui-icon-home"/>
                                     <p:separator />
@@ -54,6 +56,7 @@
                                     <p:menuitem value="Entrada de Produção" icon="ui-icon-person" url="entrada_producao.xhtml"/>
                                     <p:menuitem value="Saída de Produção"  ajax="false" icon="ui-icon-close"/>
                                     <p:menuitem value="Transf. de Depósito"  ajax="false" icon="ui-icon-close"/>
+                                    <p:menuitem value="Consulta Produção"  ajax="false" icon="ui-icon-person" url="consulta_producao.xhtml"/>
                                 </p:submenu>
                                 <p:submenu label="Estoque">
                                     <p:menuitem value="Entrada de Produto"  icon="ui-icon-home"/>
@@ -65,7 +68,7 @@
                 </p:layoutUnit>  
                 <p:layoutUnit position="center">  
                     <ui:insert name="centro">
-                        O que estiver aqui será substituido!
+                        <h:outputText value=" Bem Vindo #{autenticacaoBean.usuariologado.nome}"/>
                     </ui:insert>
                 </p:layoutUnit>  
             </p:layout>  

@@ -31,7 +31,7 @@
                         <f:selectItem noSelectionOption="true" itemLabel="Selecione o grão"/>
                         <f:selectItems value="#{colheitaBean.graos}" var="grao"
                                        itemLabel="#{grao.descrição}" itemValue="#{grao}"/>
-                        <p:ajax listener="#{colheitaBean.popular()}" update=" :formcolheita:safratalhao"/>
+                        <p:ajax listener="#{colheitaBean.popular}" update=" :formcolheita:safratalhao"/>
                     </p:selectOneMenu>
 
                     <p:outputLabel for="safratalhao" value="Safra/Talhao"/>
