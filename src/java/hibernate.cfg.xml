@@ -23,12 +23,5 @@
     <mapping class="br.fructus.entity.SafraTalhao"/>
     <mapping class="br.fructus.entity.Deposito"/>
     <mapping class="br.fructus.entity.Colheita"/>
-    <mapping class="br.fructus.entity.Usuario"/>
-    <mapping class="br.fructus.entity.CliFor"/>
-    <mapping class="br.fructus.entity.Pais"/>
-    <mapping class="br.fructus.entity.Municipio"/>
-    <mapping class="br.fructus.entity.ClassePro"/>
-    <mapping class="br.fructus.entity.FamiliaPro"/>
-    <mapping class="br.fructus.entity.Produto"/>
   </session-factory>
 </hibernate-configuration>
