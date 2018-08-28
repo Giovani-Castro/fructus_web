@@ -30,5 +30,7 @@
     <mapping class="br.fructus.entity.ClassePro"/>
     <mapping class="br.fructus.entity.FamiliaPro"/>
     <mapping class="br.fructus.entity.Produto"/>
+    <mapping class="br.fructus.entity.LigaForProd"/>
+    <mapping class="br.fructus.entity.NfeRaiz"/>
   </session-factory>
 </hibernate-configuration>

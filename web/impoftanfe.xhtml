@@ -11,14 +11,68 @@
 
         <h:form enctype="multipart/form-data">
             <p:fileUpload fileUploadListener="#{importaNfeBean.upload}" mode="advanced" dragDropSupport="false"
-                          update="messages" label="Escolher" uploadLabel="Salvar" cancelLabel="Cancelar"
+                          update=":formdialogo:paineldialogo messages" label="Escolher" uploadLabel="Salvar" cancelLabel="Cancelar"
                           allowTypes="/(\.|\/)(xml)$/" 
                           invalidFileMessage="São permitidas somente arquivos XML" 
                           fileLimit="1" 
                           fileLimitMessage="Só é possível escolher 1 arquivos por vez."/>
 
-            <p:growl id="messages" showDetail="true" />
+            <p:growl id="messages"   />
         </h:form>
+
+        <p:dialog header="Cadastro de Fornecedores" widgetVar="cadfornecedores" draggable="false"
+                  resizable="false" modal="false">
+            <h:form id="formdialogo">
+
+                <h:panelGrid id="paineldialogo" columns="2"  style="margin:10px 0">
+
+                    <p:outputLabel for="nome" value="Razão Social"/>
+                    <p:inputText id="nome" value ="#{importaNfeBean.fornecedor.nome}" required="true" size="60" requiredMessage="A razão social é obrigatória" />
+                    
+
+                    <p:outputLabel for="fantasia" value="Nome Fantasia"/>
+                    <p:inputText id="fantasia" value="#{importaNfeBean.fornecedor.fantasia}" size="40" />
+
+                    <p:outputLabel for="tipop" value="Pessoa Fisica ou Jurídica"/>
+                    <p:selectOneRadio id="tipop" value="#{importaNfeBean.fornecedor.tipopessoa}"
+                                      required="true" requiredMessage="O campo tipo pessoa é obrigatório">
+                        <f:selectItem itemValue="F" itemLabel="Física"/>
+                        <f:selectItem itemValue="J" itemLabel="Jurídica"/>
+
+                    </p:selectOneRadio>
+
+                    <p:outputLabel for="clifor" value="Cliente ou Fornecedor"/>
+                    <p:selectOneRadio id="clifor" value="#{importaNfeBean.fornecedor.forcli}"
+                                      required="true" requiredMessage="O campo cliente ou fornecedor é obrigatório">
+                        <f:selectItem itemValue="F" itemLabel="Fornecedor"/>
+                        <f:selectItem itemValue="C" itemLabel="Cliente"/>
+                        <f:selectItem itemValue="A" itemLabel="Ambos"/>
+
+                    </p:selectOneRadio>
+                    
+                    <p:outputLabel for="emailemit" value="Email do Fornecedor"/>
+                    <p:inputText id="emailemit" value="#{importaNfeBean.fornecedor.email}" size="25"/>
+                    
+
+                    <p:outputLabel for="nomecont" value="Nome Contato"/>
+                    <p:inputText id="nomecont" value="#{importaNfeBean.fornecedor.nomecont}" size="25"/>
+
+                    <p:outputLabel for="telcon" value="Telefone Contato"/>
+                    <p:inputMask id="telcon" mask="(99)99999-9999"  value="#{importaNfeBean.fornecedor.telcont}" size="14"/>
+
+                    <p:outputLabel for="emailcont" value="Email do Contato"/>
+                    <p:inputText id="emailcont" value="#{importaNfeBean.fornecedor.emailcont}" size="25"/>
+                    
+                    
+
+                </h:panelGrid>
+                
+                <h:panelGrid columns="2">
+                    <p:commandButton value="salvar" actionListener="#{importaNfeBean.salvar}"  oncomplete="PF('cadfornecedores').hide();"  />
+                    <p:commandButton value="fechar" oncomplete="PF('cadfornecedores').hide();"/>  
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
 
     </ui:define>
 </ui:decorate>

@@ -102,6 +102,8 @@ public class ProdutorBean implements Serializable {
     public void salvar(){
         try{
             ProdutorDao produtordao = new ProdutorDao();
+            String cpfFormatado = produtor.getCpf().replaceAll("\\D","");
+            produtor.setCpf(cpfFormatado);
             produtordao.merge(produtor);
             produtor = new Produtor();
             EstadoDao estadodao = new EstadoDao();

@@ -93,6 +93,12 @@ public class CliFor extends GenericDomain {
     
     @Column (length = 60)
     private String emailcont;
+    
+    @Column( )
+    private int cnae;
+    
+    @Column( )
+    private int codregime;
 
     public String getNome() {
         return nome;
@@ -272,6 +278,22 @@ public class CliFor extends GenericDomain {
 
     public void setEmailcont(String emailcont) {
         this.emailcont = emailcont;
+    }
+
+    public int getCnae() {
+        return cnae;
+    }
+
+    public void setCnae(int cnae) {
+        this.cnae = cnae;
+    }
+
+    public int getCodregime() {
+        return codregime;
+    }
+
+    public void setCodregime(int codregime) {
+        this.codregime = codregime;
     }
     
     
